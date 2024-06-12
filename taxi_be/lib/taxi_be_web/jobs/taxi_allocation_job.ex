@@ -37,7 +37,7 @@ defmodule TaxiBeWeb.TaxiAllocationJob do
       )
     end)
 
-    timeout_ref = Process.send_after(self(), :timeout1, 5000)
+    timeout_ref = Process.send_after(self(), :timeout1, 90000)
     {:noreply, %{state | timeout_ref: timeout_ref}}
   end
 
