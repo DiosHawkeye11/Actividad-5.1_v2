@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 
 import socket from '../services/taxi_socket';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
 
 function Driver(props) {
   let [message, setMessage] = useState();
@@ -27,10 +27,22 @@ function Driver(props) {
     }).then(resp => setVisible(false));
   };
 
+  let notifyArrival = () => {
+    fetch(`http://localhost:4000/api/bookings/${bookingId}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: "notify_arrival", username: props.username})
+    }).then(resp => setVisible(false));
+  };
+
   return (
     <div style={{textAlign: "center", borderStyle: "solid"}}>
         Driver: {props.username}
-        <div style={{backgroundColor: "lavender", height: "100px"}}>
+        <Grid container>
+        <Grid item xl="2">
+          <Button onClick={notifyArrival} variant="outlined" color="secondary">Notify arrival</Button>
+        </Grid>
+        <Grid item style={{backgroundColor: "lavender", height: "100px"}} xl="10">
           {
             visible ?
             <Card variant="outlined" style={{margin: "auto", width: "600px"}}>
@@ -44,7 +56,8 @@ function Driver(props) {
             </Card> :
             null
           }
-        </div>
+        </Grid>
+        </Grid>
     </div>
   );
 }

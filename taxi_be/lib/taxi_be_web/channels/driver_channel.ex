@@ -5,4 +5,5 @@ defmodule TaxiBeWeb.DriverChannel do
   def join("driver:" <> _username, _payload, socket) do
     {:ok, socket}
   end
+
 end
