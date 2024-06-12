@@ -94,9 +94,10 @@ defmodule TaxiBeWeb.TaxiAllocationJob do
     {:noreply, %{state | count: count}}
   end
 
-  def handle_cast({:process_notify_arrival, username}, state) do
+  def handle_cast({:process_notify_arrival, _driver_username}, %{request: request} = state) do
+    %{"username" => username} = request
     TaxiBeWeb.Endpoint.broadcast("customer:" <> username, "booking_request", %{msg: "Ya llegue "})
-    {:noreply, state}
+    {:stop, :normal, state}
   end
 
   def handle_cast({:process_reject, driver_username}, %{rejected_taxis: rejected_taxis, taxis: taxis} = state) do
