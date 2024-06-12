@@ -64,7 +64,6 @@ defmodule TaxiBeWeb.TaxiAllocationJob do
   end
 
   def handle_info({:tick, count}, state) do
-    IO.puts("Contador: #{count}")
     Process.send_after(self(), {:tick, count + 1}, 1000)
     {:noreply, %{state | count: count}}
   end
@@ -91,15 +90,13 @@ defmodule TaxiBeWeb.TaxiAllocationJob do
   end
 
   def handle_info({:tick, count}, state) do
-    IO.puts("Contador: #{count}")
     Process.send_after(self(), {:tick, count + 1}, 1000)
     {:noreply, %{state | count: count}}
   end
 
-  def handle_cast({:process_notify_arrival}, %{request: request} = state) do
-    %{"username" => username} = request
+  def handle_cast({:process_notify_arrival, username}, state) do
     TaxiBeWeb.Endpoint.broadcast("customer:" <> username, "booking_request", %{msg: "Ya llegue "})
-    {:stop, :normal, state}
+    {:noreply, state}
   end
 
   def handle_cast({:process_reject, driver_username}, %{rejected_taxis: rejected_taxis, taxis: taxis} = state) do
